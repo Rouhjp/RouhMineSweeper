@@ -35,7 +35,7 @@ class MineField{
     private enum Status{
         READY,GENERATED,EXPLODED,SECURED
     }
-    private class Cell implements Cloneable{
+    private class Cell{
         private static final int MINE = 9;
         private final int index;
         private int value = 0;
