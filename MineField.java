@@ -91,14 +91,12 @@ class MineField{
     private void open(Cell target){
         if(target.face==Face.DEFAULT){
             target.face = Face.REMOVED;
-            if(++openCount==height*width-mines){
-                this.status = Status.SECURED;
-            }else{
-                if(target.value==0){
-                    target.aroundCells().forEach(this::open);
-                }else if(target.isMine()){
-                    this.status = Status.EXPLODED;
-                }
+            if(target.isMine()){
+                status = Status.EXPLODED;
+            }else if(++openCount==height*width-mines){
+                status = Status.SECURED;
+            }else if(target.value==0){
+                target.aroundCells().forEach(this::open);
             }
         }
     }
