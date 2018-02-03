@@ -10,8 +10,10 @@ Windows7版に近いマインスイーパーです。
 その代わりにリセットボタンと難易度選択用コンボボックスを設置。  
 気が向いたら何かしら改良を施そうと思います。
 
-自動攻略アルゴリズムを実装  
+自動攻略アルゴリズムを実装  
 運ゲー突入までは対応  
 
 MineSweeper.java ... GUI用フレーム(Main)  
 MineField.java ... ゲーム自体  
+AutoMiner.java ... 自動攻略  
+RouhMineSweeper.jar...実行ファイル  
