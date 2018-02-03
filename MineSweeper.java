@@ -56,7 +56,7 @@ public class MineSweeper extends MouseAdapter implements ActionListener{
         comboBox.setSelectedItem(difficulty);
         resetButton = new JButton("RESET");
         resetButton.addActionListener(this);
-        cheatButton = new JButton("AUTO-PLAY");
+        cheatButton = new JButton("CHEAT");
         cheatButton.addActionListener(this);
         upper.add(comboBox);
         upper.add(resetButton);
