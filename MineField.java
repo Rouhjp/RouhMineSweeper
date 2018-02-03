@@ -140,7 +140,7 @@ class MineField{
         }
     }
     void toggleFlag(int x, int y){
-        if(status!=Status.EXPLODED) toggleFlag(cells.get(x + y*width));
+        if(status==Status.GENERATED) toggleFlag(cells.get(x + y*width));
     }
     void flagOpen(int x, int y){
         if(status==Status.GENERATED) flagOpen(cells.get(x + y*width));
