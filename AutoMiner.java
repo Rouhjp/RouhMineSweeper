@@ -106,15 +106,14 @@ class AutoMiner{
                 });
     }
     private static boolean isConsistent(List<Cell> virtual){
-        return virtual.stream().filter(cell->cell.value<9)
-                .noneMatch(cell->{
+        return virtual.stream().filter(cell->cell.value>0&&cell.value<9).noneMatch(cell->{
                     int flaggedCount = (int)cell.aroundCells(virtual).stream().filter(Cell::isFlagged).count();
                     int coveredCount = (int)cell.aroundCells(virtual).stream().filter(Cell::isCovered).count();
                     return cell.value<flaggedCount||cell.value - flaggedCount>coveredCount;
                 });
     }
     private void absurdDeductionMiner(){
-        IntStream.range(0, height*width).mapToObj(cells::get).filter(cell->{
+        cells.stream().filter(cell->cell.value>0&&cell.value<9).filter(cell->{
             int flaggedCount = (int)cell.aroundCells(cells).stream().filter(Cell::isFlagged).count();
             int coveredCount = (int)cell.aroundCells(cells).stream().filter(Cell::isCovered).count();
             return coveredCount>cell.value - flaggedCount;
@@ -164,14 +163,4 @@ class AutoMiner{
                     cells.get(i).update();
                 }).count()>0;
     }
-    /*
-    private void show(List<Cell> cells){
-        System.out.println();
-        cells.forEach(cell->{
-            System.out.print(cell.index%width==0? "|":"");
-            System.out.print(new String[]{"　","１","２","３","４","５","６","７","８","※","■","◆","□"}[cell.value]+"|");
-            System.out.print(cell.index%width==width-1? "\n":"");
-        });
-    }
-    //*/
 }
