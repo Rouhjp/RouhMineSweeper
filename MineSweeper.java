@@ -21,10 +21,11 @@ public class MineSweeper extends MouseAdapter implements ActionListener{
     private JLabel[][] cells;
     private JComboBox<MineField.Difficulty> comboBox;
     private JButton resetButton;
+    private JButton cheatButton;
     private JLabel timeCounter;
     private JLabel mineCounter;
     private final Object locker = new Object();
-    private TimerThread timer;
+    private boolean timer = false;
     private int currentX = 0;
     private int currentY = 0;
     private MineSweeper(MineField.Difficulty difficulty){
@@ -55,8 +56,11 @@ public class MineSweeper extends MouseAdapter implements ActionListener{
         comboBox.setSelectedItem(difficulty);
         resetButton = new JButton("RESET");
         resetButton.addActionListener(this);
+        cheatButton = new JButton("AUTO-PLAY");
+        cheatButton.addActionListener(this);
         upper.add(comboBox);
         upper.add(resetButton);
+        upper.add(cheatButton);
         field = new JPanel();
         field.setVisible(true);
         field.setLayout(new GridLayout(height, width));
@@ -93,12 +97,14 @@ public class MineSweeper extends MouseAdapter implements ActionListener{
         @Override
         public void run(){
             synchronized(locker){
+                timer = true;
                 try{
                     int counter = 0;
                     while(game.isRunning()){
                         timeCounter.setText("" + (++counter));
                         locker.wait(1000);
                     }
+                    timer = false;
                 }catch(InterruptedException e){
                     e.printStackTrace();
                 }
@@ -236,7 +242,7 @@ public class MineSweeper extends MouseAdapter implements ActionListener{
             int y = currentY;
             if(isWithin(x, y)){
                 game.open(x, y);
-                if(timer==null) (this.timer = new TimerThread()).start();
+                if(!timer) new TimerThread().start();
                 updateViewSpirallyFrom(x, y);
                 if(game.isFinished()) result();
             }
@@ -253,11 +259,14 @@ public class MineSweeper extends MouseAdapter implements ActionListener{
             removeComponents();
             initializeFrame();
             updateAllView();
+        }else if(e.getSource().equals(cheatButton)){
+            new AutoMiner(game).execute();
+            if(!timer) new TimerThread().start();
+            updateAllView();
         }
     }
     private void result(){
         updateAllView();
-        timer = null;
         lower.add(new JLabel(game.isSecured()?"you win":"you lose"));
     }
     public static void main(String[] args){

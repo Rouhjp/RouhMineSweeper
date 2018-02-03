@@ -35,7 +35,7 @@ class MineField{
     private enum Status{
         READY,GENERATED,EXPLODED,SECURED
     }
-    private class Cell{
+    private class Cell implements Cloneable{
         private static final int MINE = 9;
         private final int index;
         private int value = 0;
@@ -45,9 +45,6 @@ class MineField{
         }
         private boolean isMine(){
             return this.value==MINE;
-        }
-        private void removeFace(){
-            this.face = Face.REMOVED;
         }
         private List<Cell> aroundCells(){
             return IntStream.range(0, 9).filter(i->i!=4)
@@ -82,7 +79,6 @@ class MineField{
                     Math.abs(randomPoint/width - target.index/width)>=2){
                 Cell randomTarget = cells.get(randomPoint);
                 if(!randomTarget.isMine()){
-                    System.out.print(randomPoint+",");
                     randomTarget.value = Cell.MINE;
                     count++;
                 }
@@ -94,7 +90,7 @@ class MineField{
     }
     private void open(Cell target){
         if(target.face==Face.DEFAULT){
-            target.removeFace();
+            target.face = Face.REMOVED;
             if(++openCount==height*width-mines){
                 this.status = Status.SECURED;
             }else{
@@ -150,6 +146,9 @@ class MineField{
     }
     void flagOpen(int x, int y){
         if(status==Status.GENERATED) flagOpen(cells.get(x + y*width));
+    }
+    boolean isDefault(){
+        return status==Status.READY;
     }
     boolean isFinished(){
         return status==Status.EXPLODED||status==Status.SECURED;
